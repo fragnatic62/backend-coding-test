@@ -7,7 +7,7 @@ build:
   stage: build
   script:
     - docker --version
-    - docker build -t wordcountapp:latest .
+    - docker build -t wordcountapp:latest -f Dockerfile.deploy .
   tags:
     - localshell
     - localrunner
@@ -15,7 +15,8 @@ build:
 test:
   stage: test
   script:
-    - pytest
+    - docker build -t testimage -f Dockerfile.test .
+    - docker run testimage
   tags:
     - localshell
     - localrunner

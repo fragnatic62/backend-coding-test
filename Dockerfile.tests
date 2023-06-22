@@ -1,0 +1,16 @@
+# Dockerfile
+
+# Use a base image with Python installed
+FROM python:3.10
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the project files to the container
+COPY . .
+
+# Install project dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Run pytest when the container starts
+CMD ["pytest"]

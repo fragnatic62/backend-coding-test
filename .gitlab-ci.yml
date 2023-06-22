@@ -1,6 +1,3 @@
-services:
-  - docker:dind
-
 stages:
   - build
   - test
@@ -15,12 +12,13 @@ variables:
 build:
   stage: build
   image: python:3.10
+  services:
+    - docker:dind
   script:
     - pip install -r requirements.txt
     - docker build -t $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
   tags:
-    - localrunner
-    - localshell
+    - docker
 
 test:
   stage: test

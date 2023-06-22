@@ -5,20 +5,15 @@ stages:
 
 build:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
   script:
-    - docker build -t myapp:latest .
+    - docker --version
+    - docker build -t wordcountapp .
   tags:
     - uvicornrunner
     - localuvicornrunner
 
 test:
   stage: test
-  image: docker:latest
-  services:
-    - docker:dind
   script:
     - pip install -r requirements.txt
     - pytest
@@ -28,11 +23,8 @@ test:
 
 deploy:
   stage: deploy
-  image: docker:latest
-  services:
-    - docker:dind
   script:
-    - docker run -d -p 8000:8000 --name myapp_container myapp:latest
+    - docker run -d -p 8000:8000 --name myapp_container wordcountapp
   tags:
     - uvicornrunner
     - localuvicornrunner

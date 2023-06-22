@@ -17,7 +17,7 @@ test:
   script:
     - pytest
   tags:
-    - localrunner
+    - localshell
     - localrunner
 
 deploy:
@@ -26,5 +26,5 @@ deploy:
     - docker stop wordcountapp || true && docker rm wordcountapp || true
     - docker run -d -p 8000:8000 --name wordcountapp wordcountapp:latest
   tags:
-    - localrunner
+    - localshell
     - localrunner

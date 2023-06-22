@@ -7,24 +7,24 @@ build:
   stage: build
   script:
     - docker --version
-    - docker build -t wordcountapp .
+    - docker build -t wordcountapp:latest .
   tags:
-    - localuvicornrunner
-    - uvicornrunner
+    - localshell
+    - localrunner
 
 test:
   stage: test
   script:
-    - pip install -r requirements.txt
     - pytest
   tags:
-    - uvicornrunner
-    - localuvicornrunner
+    - localrunner
+    - localrunner
 
 deploy:
   stage: deploy
   script:
-    - docker run -d -p 8000:8000 --name myapp_container wordcountapp
+    - docker stop wordcountapp || true && docker rm wordcountapp || true
+    - docker run -d -p 8000:8000 --name wordcountapp wordcountapp:latest
   tags:
-    - uvicornrunner
-    - localuvicornrunner
+    - localrunner
+    - localrunner

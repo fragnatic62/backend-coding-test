@@ -1,0 +1,40 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  APP_NAME: my-fastapi-app
+  DOCKER_IMAGE_TAG: latest
+  DOCKER_REGISTRY: registry.gitlab.com
+  DOCKER_REGISTRY_IMAGE: $DOCKER_REGISTRY/backend-coding-test/$APP_NAME
+
+build:
+  stage: build
+  image: python:3.10
+  script:
+    - pip install -r requirements.txt
+    - docker build -t $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
+  tags:
+    - docker
+
+test:
+  stage: test
+  image: python:3.10
+  script:
+    - pip install -r requirements.txt
+    - pytest
+  tags:
+    - docker
+
+deploy:
+  stage: deploy
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" $DOCKER_REGISTRY
+    - docker push $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG
+    - echo "Deploy the app using your deployment strategy (e.g., Kubernetes, Docker Swarm, etc.)"
+  tags:
+    - docker

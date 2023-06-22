@@ -9,8 +9,8 @@ build:
     - docker --version
     - docker build -t wordcountapp .
   tags:
-    - uvicornrunner
     - localuvicornrunner
+    - uvicornrunner
 
 test:
   stage: test

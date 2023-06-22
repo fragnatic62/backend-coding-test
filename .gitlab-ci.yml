@@ -19,7 +19,8 @@ build:
     - pip install -r requirements.txt
     - docker build -t $DOCKER_REGISTRY_IMAGE:$DOCKER_IMAGE_TAG .
   tags:
-    - docker
+    - localrunner
+    - localshell
 
 test:
   stage: test

@@ -23,7 +23,7 @@ async def word_count(request_data: WordCountRequest) -> WordCountResponse:
     html_source = response.text
 
     # Splitting HTML source into individual word and occurence
-    count = count = len(re.findall(r'(?<!-)\b{}\b(?<!-)' .format(re.escape(text_search.lower())), html_source.lower()))
+    count = len(re.findall(r'(?<!-)\b{}\b(?<!-)' .format(re.escape(text_search.lower())), html_source.lower()))
 
     # Save to DB(Optional)
 

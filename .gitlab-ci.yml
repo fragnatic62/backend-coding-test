@@ -4,7 +4,7 @@ stages:
   - deploy
 
 variables:
-  APP_NAME: my-fastapi-app
+  APP_NAME: backend-coding-test
   DOCKER_IMAGE_TAG: latest
   DOCKER_REGISTRY: registry.gitlab.com
   DOCKER_REGISTRY_IMAGE: $DOCKER_REGISTRY/backend-coding-test/$APP_NAME

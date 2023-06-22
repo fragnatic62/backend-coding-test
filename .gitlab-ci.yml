@@ -15,7 +15,7 @@ build:
 test:
   stage: test
   script:
-    - docker build -t testimage -f Dockerfile.test .
+    - docker build -t testimage -f Dockerfile.tests .
     - docker run testimage
   tags:
     - localshell

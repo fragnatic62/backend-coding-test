@@ -1,5 +1,11 @@
 # BACKEND-CODING-TEST
 
+I personally prefer gitlab due to it's CI/CD built-in so here is the link of it.
+
+GitLab Repository: https://gitlab.com/fragnatic62/backend-coding-test
+
+Within GitLab, you can utilize its built-in CI/CD capabilities by running the pipeline. 
+This will allow you to verify if the tests are functioning correctly.
 
 
 Here's a document describing the API:

@@ -3,6 +3,8 @@ from pydantic import BaseModel
 import requests
 import re
 
+from database.models import WordCount, SessionLocal
+
 app = FastAPI()
 
 class WordCountRequest(BaseModel):
@@ -12,9 +14,9 @@ class WordCountRequest(BaseModel):
 class WordCountResponse(BaseModel):
     count: int
 
-@app.post('/wordcount',response_model=WordCountResponse)
+@app.post('/wordcount', response_model=WordCountResponse)
 async def word_count(request_data: WordCountRequest) -> WordCountResponse:
-    # Retrived the word and webpage URL from request
+    # Retrieve the word and webpage URL from the request
     text_search = request_data.word
     url = request_data.url
 
@@ -22,10 +24,17 @@ async def word_count(request_data: WordCountRequest) -> WordCountResponse:
     response = requests.get(url)
     html_source = response.text
 
-    # Splitting HTML source into individual word and occurence
+    # Splitting HTML source into individual word and occurrence
     count = len(re.findall(r'(?<!-)\b{}\b(?<!-)' .format(re.escape(text_search.lower())), html_source.lower()))
 
-    # Save to DB(Optional)
+    # Save to DB
+    db = SessionLocal()
+    word_count = WordCount(word=text_search, url=url, count=count)
+    db.add(word_count)
+    db.commit()
+    db.refresh(word_count)
+    db_count = word_count.count
+    db.close()
 
     # Return response
-    return WordCountResponse(count=count)
+    return WordCountResponse(count=db_count)

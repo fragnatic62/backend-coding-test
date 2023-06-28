@@ -120,8 +120,6 @@ Certainly! Here's an example README file content that explains how to use Alembi
 
 ---
 
-Feel free to modify and expand upon this template based on your specific project needs.
-
 ***
 
 ## Support

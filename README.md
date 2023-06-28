@@ -60,15 +60,134 @@ Example Response:
 - The word count is calculated by searching for the exact word boundaries in the webpage content.
 - Optionally, the API can save the word count result to a database.
 
-## Test and Deploy
+**Endpoint**: `/wordcounts`
 
-Use the built-in continuous integration in GitLab.
+**Method**: GET
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**Description**: Retrieves all word counts stored in the database.
+
+**Response**:
+The response will be in the JSON format and will follow the structure defined by the `WordCountDBResponse` model.
+
+Example response:
+```json
+{
+  "word_counts": [
+    {
+      "id": 1,
+      "word": "example",
+      "url": "https://example.com",
+      "count": 5
+    },
+    {
+      "id": 2,
+      "word": "test",
+      "url": "https://test.com",
+      "count": 10
+    }
+  ]
+}
+```
+
+The `word_counts` property contains a list of word count objects, where each object has the following properties:
+
+- `id` (integer): The unique identifier of the word count entry.
+- `word` (string): The word that was counted.
+- `url` (string): The URL associated with the word count.
+- `count` (integer): The number of occurrences of the word.
+
+**Example Usage**:
+You can make a GET request to the `/wordcounts` endpoint to retrieve all the word counts stored in the database.
+
+```bash
+$ curl -X GET http://localhost:8000/wordcounts
+```
+
+Response:
+```json
+{
+  "word_counts": [
+    {
+      "id": 1,
+      "word": "example",
+      "url": "https://example.com",
+      "count": 5
+    },
+    {
+      "id": 2,
+      "word": "test",
+      "url": "https://test.com",
+      "count": 10
+    }
+  ]
+}
+```
+
+Please note that you need to replace `http://localhost:8000` with the appropriate base URL where your FastAPI server is running.
+
+---
+
+## Installation
+
+1. Clone the repository:
+
+   ```
+   git clone https://github.com/your-username/project-name.git
+   ```
+
+2. Navigate to the project directory:
+
+   ```
+   cd project-name
+   ```
+
+3. Install the required dependencies:
+
+   ```
+   pip install -r requirements.txt
+   ```
+
+## Database Migrations
+
+1. Initialize Alembic: Run the following command to initialize Alembic in your project:
+
+   ```
+   alembic init alembic
+   ```
+
+   This command creates an `alembic` directory in your project, containing configuration files and a folder for storing migration scripts.
+
+2. Configure the Database URL: Open the `alembic.ini` file and locate the `[alembic]` section. Set the `sqlalchemy.url` option to the database URL for your development environment.
+
+3. Generate Initial Migration: To generate an initial migration script, run the following command:
+
+   ```
+   alembic revision --autogenerate -m "Initial migration"
+   ```
+
+   This command compares the current state of the database with the SQLAlchemy models defined in your project and generates a migration script in the `alembic/versions` directory.
+
+4. Customize the Migration: Open the generated migration script in the `alembic/versions` directory and review its contents. Modify the script, if needed, to include additional database operations or changes specific to your project requirements.
+
+5. Apply Migrations: To apply the migrations and update your database schema, run the following command:
+
+   ```
+   alembic upgrade head
+   ```
+
+   This command executes all pending migrations and brings your database up to the latest version.
+
+6. Repeat Steps 3-5 for Test Database: Follow steps 3-5 again, but this time set the `sqlalchemy.url` option in the `alembic.ini` file to the database URL for your testing environment. This ensures that migrations are also applied to the test database.
+
+## Additional Information
+
+- The `alembic.ini` file contains configuration options for Alembic. Customize these options according to your project's requirements.
+
+- The `alembic/env.py` file contains the Alembic environment setup. You can modify this file to include additional configuration or customization.
+
+- Refer to the official Alembic documentation for more information on advanced features and commands: https://alembic.sqlalchemy.org/en/latest/
+
+---
 
 ***
 

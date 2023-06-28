@@ -1,20 +1,36 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 import re
 
+from database.models import WordCount, SessionLocal
+from typing import List
+
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class WordCountRequest(BaseModel):
     word: str
     url: str
 
 class WordCountResponse(BaseModel):
+    id: int
+    word: str
+    url: str
     count: int
 
-@app.post('/wordcount',response_model=WordCountResponse)
+class WordCountDBResponse(BaseModel):
+    word_counts: List[WordCountResponse]
+
+@app.post('/wordcount', response_model=WordCountResponse)
 async def word_count(request_data: WordCountRequest) -> WordCountResponse:
-    # Retrived the word and webpage URL from request
+    # Retrieve the word and webpage URL from the request
     text_search = request_data.word
     url = request_data.url
 
@@ -22,10 +38,32 @@ async def word_count(request_data: WordCountRequest) -> WordCountResponse:
     response = requests.get(url)
     html_source = response.text
 
-    # Splitting HTML source into individual word and occurence
+    # Splitting HTML source into individual word and occurrence
     count = len(re.findall(r'(?<!-)\b{}\b(?<!-)' .format(re.escape(text_search.lower())), html_source.lower()))
 
-    # Save to DB(Optional)
+    # Save to DB
+    db = SessionLocal()
+    word_count = WordCount(word=text_search, url=url, count=count)
+    db.add(word_count)
+    db.commit()
+
+    # Access the ID after the record is committed
+    db.refresh(word_count)
+    db_id = word_count.id
+    db_count = word_count.count
+
+    db.close()
 
     # Return response
-    return WordCountResponse(count=count)
+    return WordCountResponse(id=db_id,word=text_search,url=url,count=db_count)
+
+@app.get('/wordcounts', response_model=WordCountDBResponse)
+async def get_word_counts() -> WordCountDBResponse:
+    db = SessionLocal()
+    word_counts = db.query(WordCount).all()
+    db.close()
+
+    word_counts_response = [
+        WordCountResponse(id=word_count.id, word=word_count.word, url=word_count.url, count=word_count.count) for word_count in word_counts
+    ]
+    return WordCountDBResponse(word_counts=word_counts_response)

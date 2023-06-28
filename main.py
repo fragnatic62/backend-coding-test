@@ -5,7 +5,7 @@ import requests
 import re
 
 from database.models import WordCount, SessionLocal
-from typing import List, Optional
+from typing import List
 
 app = FastAPI()
 app.add_middleware(

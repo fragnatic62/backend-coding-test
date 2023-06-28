@@ -1,18 +1,32 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 import re
 
 from database.models import WordCount, SessionLocal
+from typing import List, Optional
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class WordCountRequest(BaseModel):
     word: str
     url: str
 
 class WordCountResponse(BaseModel):
+    id: int
+    word: str
+    url: str
     count: int
+
+class WordCountDBResponse(BaseModel):
+    word_counts: List[WordCountResponse]
 
 @app.post('/wordcount', response_model=WordCountResponse)
 async def word_count(request_data: WordCountRequest) -> WordCountResponse:
@@ -32,9 +46,24 @@ async def word_count(request_data: WordCountRequest) -> WordCountResponse:
     word_count = WordCount(word=text_search, url=url, count=count)
     db.add(word_count)
     db.commit()
+
+    # Access the ID after the record is committed
     db.refresh(word_count)
+    db_id = word_count.id
     db_count = word_count.count
+
     db.close()
 
     # Return response
-    return WordCountResponse(count=db_count)
+    return WordCountResponse(id=db_id,word=text_search,url=url,count=db_count)
+
+@app.get('/wordcounts', response_model=WordCountDBResponse)
+async def get_word_counts() -> WordCountDBResponse:
+    db = SessionLocal()
+    word_counts = db.query(WordCount).all()
+    db.close()
+
+    word_counts_response = [
+        WordCountResponse(id=word_count.id, word=word_count.word, url=word_count.url, count=word_count.count) for word_count in word_counts
+    ]
+    return WordCountDBResponse(word_counts=word_counts_response)

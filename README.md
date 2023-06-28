@@ -54,7 +54,70 @@ Example Response:
 - The word count is calculated by searching for the exact word boundaries in the webpage content.
 - Optionally, the API can save the word count result to a database.
 
-Certainly! Here's an example README file content that explains how to use Alembic for managing database migrations in your project:
+**Endpoint**: `/wordcounts`
+
+**Method**: GET
+
+**Description**: Retrieves all word counts stored in the database.
+
+**Response**:
+The response will be in the JSON format and will follow the structure defined by the `WordCountDBResponse` model.
+
+Example response:
+```json
+{
+  "word_counts": [
+    {
+      "id": 1,
+      "word": "example",
+      "url": "https://example.com",
+      "count": 5
+    },
+    {
+      "id": 2,
+      "word": "test",
+      "url": "https://test.com",
+      "count": 10
+    }
+  ]
+}
+```
+
+The `word_counts` property contains a list of word count objects, where each object has the following properties:
+
+- `id` (integer): The unique identifier of the word count entry.
+- `word` (string): The word that was counted.
+- `url` (string): The URL associated with the word count.
+- `count` (integer): The number of occurrences of the word.
+
+**Example Usage**:
+You can make a GET request to the `/wordcounts` endpoint to retrieve all the word counts stored in the database.
+
+```bash
+$ curl -X GET http://localhost:8000/wordcounts
+```
+
+Response:
+```json
+{
+  "word_counts": [
+    {
+      "id": 1,
+      "word": "example",
+      "url": "https://example.com",
+      "count": 5
+    },
+    {
+      "id": 2,
+      "word": "test",
+      "url": "https://test.com",
+      "count": 10
+    }
+  ]
+}
+```
+
+Please note that you need to replace `http://localhost:8000` with the appropriate base URL where your FastAPI server is running.
 
 ---
 

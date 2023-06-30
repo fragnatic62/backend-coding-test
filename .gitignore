@@ -28,7 +28,7 @@ env2/
 # Logs and databases
 *.log
 *.sqlite3
-*.db
+wordcount.db
 
 # Local configuration
 *.env

@@ -1,11 +1,11 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 import requests
 import re
 
 from database.models import WordCount, SessionLocal
-from typing import List
+from schemas.wordcount.request import WordCountRequest
+from schemas.wordcount.response import WordCountDBResponse, WordCountResponse
 
 app = FastAPI()
 app.add_middleware(
@@ -14,19 +14,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-class WordCountRequest(BaseModel):
-    word: str
-    url: str
-
-class WordCountResponse(BaseModel):
-    id: int
-    word: str
-    url: str
-    count: int
-
-class WordCountDBResponse(BaseModel):
-    word_counts: List[WordCountResponse]
 
 @app.post('/wordcount', response_model=WordCountResponse)
 async def word_count(request_data: WordCountRequest) -> WordCountResponse:

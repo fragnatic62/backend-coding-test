@@ -2,12 +2,13 @@ from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from main import app
-from database.models import SessionLocal, engine
+from database.models import engine
 from database.models import WordCount
 from schemas.wordcount.response import WordCountDBResponse, WordCountResponse
-from sqlalchemy.orm import load_only
+
 
 client = TestClient(app)
+
 
 def test_get_word_counts():
     # Prepare test data

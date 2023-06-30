@@ -7,9 +7,11 @@ from main import app
 
 client = TestClient(app)
 
+
 def validate_test_database_from_sessionlocal():
     session = SessionLocal()
     assert session.bind.url == 'sqlite:///test_wordcount.db'
+
 
 def validate_environment_variable():
     load_dotenv()  # Load environment variables from .env file
@@ -22,7 +24,7 @@ def test_word_count_e2e():
     """
     This API should be working 🎇🎆✨
     """
-    
+
     request_data = {
         'word': 'fit',
         'url': 'https://www.virtusize.jp/'
@@ -32,6 +34,7 @@ def test_word_count_e2e():
     assert response.status_code == 200
     expected_response = {'word': 'fit', 'url': 'https://www.virtusize.jp/', 'count': 13}
     assert all(item in response.json().items() for item in expected_response.items())
+
 
 def test_word_count_exact_occurrence_e2e():
     """
@@ -122,7 +125,7 @@ def test_word_count_with_punctuation_e2e():
     considering 'fit' with a comma or period after it
     """
     url = 'https://www.virtusize.jp/'
-    expected_count = 3
+
     request_data = {
         'word': 'fit',
         'url': 'https://www.virtusize.jp/'

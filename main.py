@@ -8,12 +8,14 @@ from schemas.wordcount.request import WordCountRequest
 from schemas.wordcount.response import WordCountDBResponse, WordCountResponse
 
 app = FastAPI()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 @app.post('/wordcount', response_model=WordCountResponse)
 async def word_count(request_data: WordCountRequest) -> WordCountResponse:
@@ -42,7 +44,8 @@ async def word_count(request_data: WordCountRequest) -> WordCountResponse:
     db.close()
 
     # Return response
-    return WordCountResponse(id=db_id,word=text_search,url=url,count=db_count)
+    return WordCountResponse(id=db_id, word=text_search, url=url, count=db_count)
+
 
 @app.get('/wordcounts', response_model=WordCountDBResponse)
 async def get_word_counts() -> WordCountDBResponse:

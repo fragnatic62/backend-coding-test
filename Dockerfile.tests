@@ -12,5 +12,8 @@ COPY . .
 # Install project dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Run Flake8 to perform linting on the project
+RUN flake8
+
 # Run pytest when the container starts
 CMD ["pytest"]
